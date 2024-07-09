@@ -52,6 +52,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 			FreshRSS_Context::userConf()->content_width = Minz_Request::paramString('content_width') ?: 'thin';
 			FreshRSS_Context::userConf()->topline_read = Minz_Request::paramBoolean('topline_read');
 			FreshRSS_Context::userConf()->topline_favorite = Minz_Request::paramBoolean('topline_favorite');
+			FreshRSS_Context::userConf()->topline_sharing = Minz_Request::paramBoolean('topline_sharing');
 			FreshRSS_Context::userConf()->topline_date = Minz_Request::paramBoolean('topline_date');
 			FreshRSS_Context::userConf()->topline_link = Minz_Request::paramBoolean('topline_link');
 			FreshRSS_Context::userConf()->topline_website = Minz_Request::paramString('topline_website');
@@ -123,6 +124,7 @@ class FreshRSS_configure_Controller extends FreshRSS_ActionController {
 			FreshRSS_Context::userConf()->show_tags_max = Minz_Request::paramInt('show_tags_max');
 			FreshRSS_Context::userConf()->show_author_date = Minz_Request::paramString('show_author_date') ?: '0';
 			FreshRSS_Context::userConf()->show_feed_name = Minz_Request::paramString('show_feed_name') ?: 't';
+			FreshRSS_Context::userConf()->show_article_icons = Minz_Request::paramString('show_article_icons') ?: 't';
 			FreshRSS_Context::userConf()->hide_read_feeds = Minz_Request::paramBoolean('hide_read_feeds');
 			FreshRSS_Context::userConf()->onread_jump_next = Minz_Request::paramBoolean('onread_jump_next');
 			FreshRSS_Context::userConf()->lazyload = Minz_Request::paramBoolean('lazyload');
