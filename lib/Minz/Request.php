@@ -40,7 +40,7 @@ class Minz_Request {
 	 * Read the URL parameter
 	 * @param string $key Key name
 	 * @param mixed $default default value, if no parameter is given
-	 * @param bool $specialchars special characters
+	 * @param bool $specialchars `true` to return special characters, `false` (default) to XML-encode them
 	 * @return mixed value of the parameter
 	 * @deprecated use typed versions instead
 	 */
@@ -61,21 +61,27 @@ class Minz_Request {
 		return isset(self::$params[$key]);
 	}
 
-	/** @return array<string|int,string|array<string,string|int|bool>> */
-	public static function paramArray(string $key, bool $specialchars = false): array {
+	/**
+	 * @param bool $plaintext `true` to return special characters without any escaping (unsafe), `false` (default) to XML-encode them
+	 * @return array<string|int,string|array<string,string|int|bool>>
+	 */
+	public static function paramArray(string $key, bool $plaintext = false): array {
 		if (empty(self::$params[$key]) || !is_array(self::$params[$key])) {
 			return [];
 		}
-		return $specialchars ? Minz_Helper::htmlspecialchars_utf8(self::$params[$key]) : self::$params[$key];
+		return $plaintext ? self::$params[$key] : Minz_Helper::htmlspecialchars_utf8(self::$params[$key]);
 	}
 
-	/** @return array<string> */
-	public static function paramArrayString(string $key, bool $specialchars = false): array {
+	/**
+	 * @param bool $plaintext `true` to return special characters without any escaping (unsafe), `false` (default) to XML-encode them
+	 * @return array<string>
+	 */
+	public static function paramArrayString(string $key, bool $plaintext = false): array {
 		if (empty(self::$params[$key]) || !is_array(self::$params[$key])) {
 			return [];
 		}
 		$result = array_filter(self::$params[$key], 'is_string');
-		return $specialchars ? Minz_Helper::htmlspecialchars_utf8($result) : $result;
+		return $plaintext ? $result : Minz_Helper::htmlspecialchars_utf8($result);
 	}
 
 	public static function paramTernary(string $key): ?bool {
@@ -106,12 +112,15 @@ class Minz_Request {
 		return 0;
 	}
 
-	public static function paramStringNull(string $key, bool $specialchars = false): ?string {
+	/**
+	 * @param bool $plaintext `true` to return special characters without any escaping (unsafe), `false` (default) to XML-encode them
+	 */
+	public static function paramStringNull(string $key, bool $plaintext = false): ?string {
 		if (isset(self::$params[$key])) {
 			$s = self::$params[$key];
 			if (is_string($s)) {
 				$s = trim($s);
-				return $specialchars ? $s : htmlspecialchars($s, ENT_COMPAT, 'UTF-8');
+				return $plaintext ? $s : htmlspecialchars($s, ENT_COMPAT, 'UTF-8');
 			}
 			if (is_int($s) || is_bool($s)) {
 				return (string)$s;
@@ -120,8 +129,11 @@ class Minz_Request {
 		return null;
 	}
 
-	public static function paramString(string $key, bool $specialchars = false): string {
-		return self::paramStringNull($key, $specialchars) ?? '';
+	/**
+	 * @param bool $plaintext `true` to return special characters without any escaping (unsafe), `false` (default) to XML-encode them
+	 */
+	public static function paramString(string $key, bool $plaintext = false): string {
+		return self::paramStringNull($key, $plaintext) ?? '';
 	}
 
 	/**
